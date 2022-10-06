@@ -10,25 +10,25 @@
 
 1. 抽象语法树(AST)
 
-    一种用来表示编译语言的语法结构的树形结构，用于辅助编译器进行语法分析。
+   一种用来表示编译语言的语法结构的树形结构，用于辅助编译器进行语法分析。
 
 2. 静态单赋值(SSA)
 
-    是一种中间代码的特性，即每个变量只赋值一次。
+   是一种中间代码的特性，即每个变量只赋值一次。
 
 3. 指令集架构(CPU中用来计算和控制计算机系统的一套指令的集合)
 
-    分为复杂指令集体系（CISC）和精简指令集体系（RISC）
+   分为复杂指令集体系（CISC）和精简指令集体系（RISC）
 
-    复杂指令集：
+   复杂指令集：
 
-    1. 特点：指令数量多长度不等，有额外损失性能。
-    2. 常用的是AMD64(x86_64/x64) 指令集
+   1. 特点：指令数量多长度不等，有额外损失性能。
+   2. 常用的是AMD64(x86_64/x64) 指令集
 
-    精简指令集：
+   精简指令集：
 
-    1. 特点：指令精简长度相等
-    2. 常用有ARM
+   1. 特点：指令精简长度相等
+   2. 常用有ARM
 
 ### 编译四阶段
 
@@ -40,15 +40,15 @@
 
 1. 词法分析(词法分析器)作用：将源文件转换为一个不包含空格，回车，换行等的Token序列。
 
-    通过`cmd/compile/internal/syntax/scanner.go`扫描数据源文件来匹配对应的字符，跳过空格和换行等空白字符。
+   通过`cmd/compile/internal/syntax/scanner.go`扫描数据源文件来匹配对应的字符，跳过空格和换行等空白字符。
 
 2. 语法分析(语法分析器)作用：将Token序列转为具有意义的结构体所组成的抽象语法树。
 
-    使用`LALR(1)`文法解析Token，
+   使用`LALR(1)`文法解析Token，
 
 #### 类型检查
 
-按顺序检查语法树中定义和使用的类型，确保不存在类型匹配问题。
+按顺序检查语法树中定义和使用的类型，确保不存在类型匹配问题。（包括结构体对接口的实现等）
 
 同时也会展开和改写一些内置函数如`make` 改写为`makechan`,`makeslice`,`makemap`等
 
@@ -56,45 +56,45 @@
 
 1. 强弱类型
 
-    1. 强类型：类型错误在编译期间会被指出。`Go,Java`
-    2. 弱类型：在运行时将类型错误进行隐式转换。`Js,PHP`
+   1. 强类型：类型错误在编译期间会被指出。`Go,Java`
+   2. 弱类型：在运行时将类型错误进行隐式转换。`Js,PHP`
 
 2. 静态类型检查和动态类型检查
 
-    1. 静态类型检查：对源代码的分析来确定程序类型安全的过程，可以减少运行时的类型检查。
-    2. 动态类型检查：编译时为所有对象添加类型标签之类的信息。运行时根据这些类型信息进行动态派发，向下转型，反射等特性。
+   1. 静态类型检查：对源代码的分析来确定程序类型安全的过程，可以减少运行时的类型检查。
+   2. 动态类型检查：编译时为所有对象添加类型标签之类的信息。运行时根据这些类型信息进行动态派发，向下转型，反射等特性。
 
-    `Go Java`等都是两者相结合。比如接口像具体类型的转换等。。。
+   `Go Java`等都是两者相结合。比如接口像具体类型的转换等。。。
 
 3. 执行过程
 
-    1. 切片`OTARRAY`
+   1. 切片`OTARRAY`
 
-        先对元素类型进行检查，再根据操作类型(`[]int,[...]int,[3]int`)的不同更新节点类型。
+      先对元素类型进行检查，再根据操作类型(`[]int,[...]int,[3]int`)的不同更新节点类型。
 
-    2. 哈希表 `OTMAP`
+   2. 哈希表 `OTMAP`
 
-        创建`TMAP`结构，存储哈希表的键值类型并检查是否存在类型不匹配的错误。
+      创建`TMAP`结构，存储哈希表的键值类型并检查是否存在类型不匹配的错误。
 
-    3. 关键字 `OMAKE`
+   3. 关键字 `OMAKE`
 
-        根据`make`的第一个参数的类型进入不同的分支，然后更改当前节点的Op属性
+      根据`make`的第一个参数的类型进入不同的分支，然后更改当前节点的Op属性
 
-        1. 切片:
+      1. 切片:
 
-            长度参数必须被传入，长度必须小于等于切片的容量。
+         长度参数必须被传入，长度必须小于等于切片的容量。
 
-        2. 哈希表:
+      2. 哈希表:
 
-            检查哈希表的可选初始容量大小
+         检查哈希表的可选初始容量大小
 
-        3. Channel
+      3. Channel
 
-            检查可选Channel初识缓冲大小
+         检查可选Channel初识缓冲大小
 
 #### 中间代码生成
 
-经过类型检查后，编译器并发编译所有go项目的函数生成中间代码，
+经过类型检查后，编译器并发编译所有go项目的函数生成中间代码，中间会对AST做一些替换工作。
 
 ![image-20220403174623630](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403174623630.png)
 
@@ -104,7 +104,7 @@ go编译器中间代码使用`SSA`特性，会对无用的变量和片段进行�
 
 1. 生成中间代码前编译器会替换一些抽象语法树中的元素。在遍历语法树时会将一些关键字和内置函数转化为函数调用。
 
-    ![image-20220403182952672](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403182952672.png)
+   ![image-20220403182952672](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403182952672.png)
 
 #### 机器码生成
 
@@ -404,28 +404,28 @@ case type2:
 
 2. 语句转换：
 
-    由字面量组成的数组根据元素个数编译器在类型检查期间会做出两种优化（不考虑逃逸分析）
+   由字面量组成的数组根据元素个数编译器在类型检查期间会做出两种优化（不考虑逃逸分析）
 
-    1. 元素个数`n<=4`:直接在栈上赋值初始化
+   1. 元素个数`n<=4`:直接在栈上赋值初始化
 
-        ```go
-        var arr [3]int
-        arr[0] = 1
-        arr[1] = 2
-        arr[2] = 3
-        ```
+      ```go
+      var arr [3]int
+      arr[0] = 1
+      arr[1] = 2
+      arr[2] = 3
+      ```
 
-    2. 元素个数`n>4` :先在静态存储区初始化数组元素，并将临时变量赋值给数组（栈）。
+   2. 元素个数`n>4` :先在静态存储区初始化数组元素，并将临时变量赋值给数组（栈）。
 
-        ```go
-        var arr [5]int
-        statictmp_0[0] = 1
-        statictmp_0[1] = 2
-        statictmp_0[2] = 3
-        statictmp_0[3] = 4
-        statictmp_0[4] = 5
-        arr = statictmp_0
-        ```
+      ```go
+      var arr [5]int
+      statictmp_0[0] = 1
+      statictmp_0[1] = 2
+      statictmp_0[2] = 3
+      statictmp_0[3] = 4
+      statictmp_0[4] = 5
+      arr = statictmp_0
+      ```
 
 ##### 访问和赋值
 
@@ -455,42 +455,42 @@ slice := make([]int, 10) //关键字
 
 1. 使用下标
 
-    创建一个指向底层数组的切片结构体。修改数据会影响底层数组。
+   创建一个指向底层数组的切片结构体。修改数据会影响底层数组。
 
 2. 字面量
 
-    编译时会展开为下列形式
+   编译时会展开为下列形式
 
-    ```go
-    var vstat [3]int //先创建数组
-    vstat[0] = 1
-    vstat[1] = 2
-    vstat[2] = 3
-    var vauto *[3]int = new([3]int)
-    *vauto = vstat
-    slice := vauto[:] //最后使用下标创建切片
-    ```
+   ```go
+   var vstat [3]int //先创建数组
+   vstat[0] = 1
+   vstat[1] = 2
+   vstat[2] = 3
+   var vauto *[3]int = new([3]int)
+   *vauto = vstat
+   slice := vauto[:] //最后使用下标创建切片
+   ```
 
 3. 关键字
 
-    1. 切片很小且不会发生逃逸，直接通过下标在栈或静态存储区创建。
+   1. 切片很小且不会发生逃逸，直接通过下标在栈或静态存储区创建。
 
-        ```go
-        // make([]int,3,4)
-        var arr [4]int
-        n := arr[:3]
-        ```
+      ```go
+      // make([]int,3,4)
+      var arr [4]int
+      n := arr[:3]
+      ```
 
-    2. 切片较大或逃逸
+   2. 切片较大或逃逸
 
-        在堆上初始化切片 
-    
+      在堆上初始化切片 
+
 4. new 相当于nil
 
-    ```go
-    	a := *new([]int)
-    	// var a []int
-    ```
+   ```go
+   	a := *new([]int)
+   	// var a []int
+   ```
 
 ##### 追加和扩容
 
@@ -563,9 +563,9 @@ func growslice(et *_type, old slice, cap int) slice {
 
 1. 期望长度不超过cap直接向后覆盖
 2. 超过则扩容：为切片重新分配新的空间并复制原数组内容。
-    1. 期望容量`newcap>2*cap` : 直接使用期望容量
-    2. 当前切片长度<1024` :直接分配`2*cap`
-    3. 当前切片长度>=1024`:每次增加`cap1.25倍`直到大于为止
+   1. 期望容量`newcap>2*cap` : 直接使用期望容量
+   2. 当前切片长度<1024` :直接分配`2*cap`
+   3. 当前切片长度>=1024`:每次增加`cap1.25倍`直到大于为止
 
 然后根据切片中的元素大小对齐内存。如果元素所占字节大小为`1,2或8`的倍数时会根据`class_to_size数组`向上取整来提高内存分配效率减少碎片。
 
@@ -601,30 +601,30 @@ fmt.Println(len(arr), cap(arr)) // 经过对齐分配48字节， cap为48/8=6
 
 1. 哈希函数
 
-    输出范围大于输入范围且结果需较为均匀
+   输出范围大于输入范围且结果需较为均匀
 
 2. 处理哈希冲突
 
-    1. 开放寻址法
+   1. 开放寻址法
 
-        依次探测和比较数组中的元素来判断目标是否存在于哈希表中，冲突了就继续往后找位置
+      依次探测和比较数组中的元素来判断目标是否存在于哈希表中，冲突了就继续往后找位置
 
-        ![image-20220403211523247](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403211523247.png)
-        $$
-        装载因子 = 元素÷数组大小
-        $$
-        如果大于0.7则效率低下
+      ![image-20220403211523247](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403211523247.png)
+      $$
+      装载因子 = 元素÷数组大小
+      $$
+      如果大于0.7则效率低下
 
-    2. 拉链法
+   2. 拉链法
 
-        1. 找到键相同的键值对 — 更新键对应的值；
-        2. 没有找到键相同的键值对 — 在链表的末尾追加新的键值对；
+      1. 找到键相同的键值对 — 更新键对应的值；
+      2. 没有找到键相同的键值对 — 在链表的末尾追加新的键值对；
 
-        ![image-20220403212315105](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403212315105.png)
-        $$
-        装载因子=元素数量÷桶数量
-        $$
-        在一般情况下使用拉链法的哈希表装载因子都不会超过 1
+      ![image-20220403212315105](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220403212315105.png)
+      $$
+      装载因子=元素数量÷桶数量
+      $$
+      在一般情况下使用拉链法的哈希表装载因子都不会超过 1
 
 ##### 数据结构
 
@@ -662,69 +662,69 @@ type bmap struct {
 
 1. 字面量
 
-    ```go
-    	hash := map[string]int{
-    		"1": 1,
-    		"2": 2,
-    		"3": 3,
-    	}
-    
-    hash := make(map[string]int,3)
-    hash["1"] = 1
-    ...
-    ```
+   ```go
+   	hash := map[string]int{
+   		"1": 1,
+   		"2": 2,
+   		"3": 3,
+   	}
+   
+   hash := make(map[string]int,3)
+   hash["1"] = 1
+   ...
+   ```
 
-    1. 元素个数`n<=25`：先`make`再挨个赋值
-    2. 元素个数`n>25` ：先`make`再创建两个数组保存`k,v`然后使用for循环进行赋值
+   1. 元素个数`n<=25`：先`make`再挨个赋值
+   2. 元素个数`n>25` ：先`make`再创建两个数组保存`k,v`然后使用for循环进行赋值
 
 2. 运行时
 
-    1. 当hash被分配在堆上且容量`n<8`则使用快速初始化hash表
+   1. 当hash被分配在堆上且容量`n<8`则使用快速初始化hash表
 
-        ```GO
-        func makemap_small() *hmap {
-        	h := new(hmap)
-        	h.hash0 = fastrand()
-        	return h
-        }
-        ```
-        
-    2. 否则：由传参元素个数`n`确定`B`
-    
-        1. 如果桶数`x = 2^B < 24` 不创建溢出桶
-        2. 否则创建`2^(B-4)`个溢出桶
+      ```GO
+      func makemap_small() *hmap {
+      	h := new(hmap)
+      	h.hash0 = fastrand()
+      	return h
+      }
+      ```
+
+   2. 否则：由传参元素个数`n`确定`B`
+
+      1. 如果桶数`x = 2^B < 24` 不创建溢出桶
+      2. 否则创建`2^(B-4)`个溢出桶
 
 ##### 读写操作
 
 1. 查找
 
-    1. 跟据key值算出哈希值
-    2. 取哈希值低位与hmpa.B取模确定bucket位置
-    3. 取哈希值高位在tophash数组中查询
-    4. 如果tophash[i]中存储值也哈希值相等，则去找到该bucket中的key值进行比较
-    5. 当前bucket没有找到，则继续从下个overflow的bucket中查找。
-    6. 如果当前处于搬迁过程，则优先从oldbuckets查找
+   1. 跟据key值算出哈希值
+   2. 取哈希值低位与hmpa.B取模确定bucket位置
+   3. 取哈希值高位在tophash数组中查询
+   4. 如果tophash[i]中存储值也哈希值相等，则去找到该bucket中的key值进行比较
+   5. 当前bucket没有找到，则继续从下个overflow的bucket中查找。
+   6. 如果当前处于搬迁过程，则优先从oldbuckets查找
 
-    注：如果查找不到，也不会返回空值，而是返回相应类型的0值。
+   注：如果查找不到，也不会返回空值，而是返回相应类型的0值。
 
 2. 插入
 
-    1. 跟据key值算出哈希值
-    2. 取哈希值低位与hmap.B取模确定bucket位置
-    3. 查找该key是否已经存在，如果存在则直接更新值
-    4. 如果没找到将key插入
+   1. 跟据key值算出哈希值
+   2. 取哈希值低位与hmap.B取模确定bucket位置
+   3. 查找该key是否已经存在，如果存在则直接更新值
+   4. 如果没找到将key插入
 
-    如果当前bucket已满则使用预先创建的溢出桶或者新创建一个溢出桶来保存数据，溢出桶不仅会被追加到已有桶的末尾，还会增加`noverflow`的数量
+   如果当前bucket已满则使用预先创建的溢出桶或者新创建一个溢出桶来保存数据，溢出桶不仅会被追加到已有桶的末尾，还会增加`noverflow`的数量
 
 ##### 扩容
 
 1. 装载因子`n > 6.5` 引发增量扩容
 
-    创建2倍原`bucket`大小的`newbucket`放到`bucket`上，原`bucket`放到`oldbucket`上.
+   创建2倍原`bucket`大小的`newbucket`放到`bucket`上，原`bucket`放到`oldbucket`上.
 
 2. 溢出桶数量 `n > 2^15` 引发等量扩容
 
-    和增量扩容的区别就是创建和原`bucket`等大小的新桶，最后清空旧桶和旧的溢出桶
+   和增量扩容的区别就是创建和原`bucket`等大小的新桶，最后清空旧桶和旧的溢出桶
 
 如果处于扩容状态，每次插入或者删除时，就先搬迁1~2个kv到新桶（增量扩容分到两个桶，等量扩容分到一个桶）再继续，读会优先从旧桶读。因为分流不是原子的。
 
@@ -1334,13 +1334,14 @@ for ; hb != false; hv1, hb = <-ha { // 会判断是否close
    ```
 
    1. 随机生成一个遍历的轮询顺序 `pollOrder` (防止饥饿)并根据 Channel 地址排序生成锁定顺序 `lockOrder`(防止死锁)；
-   
+
       注意如果尝试写入数据到已经关闭的channel则会panic
-   
+
    2. 根据`pollOrder`遍历所有的`case`查看是否有可以立刻处理的 Channel；
+
       1. 如果存在，直接获取 `case` 对应的索引并返回；
       2. 如果不存在，创建 [`runtime.sudog`](https://draveness.me/golang/tree/runtime.sudog) 结构体，将当前 Goroutine 加入到所有相关 Channel 的收发队列，并调用 [`runtime.gopark`](https://draveness.me/golang/tree/runtime.gopark) 挂起当前 Goroutine 等待调度器的唤醒；
-      
+
    3. 当调度器唤醒当前 Goroutine 时，会再次按照 `lockOrder` 遍历所有的 `case`，从中查找需要被处理的 [`runtime.sudog`](https://draveness.me/golang/tree/runtime.sudog) 对应的case索引，之后会吧其他sudog从剩余channel中释放。
 
 ### defer
@@ -1438,11 +1439,11 @@ type _defer struct {
 
 ### make 和 new
 
-`make` 初始化内置的数据结构，切片，哈希表，channel
+`make` 初始化内置的数据结构，`chan，map，chan` ，但是不置0值，
 
-`new` 根据传入的类型分配一块内存，返回指向这片内存的指针
+`new` 只接受一个参数，这个参数是一个类型，分配好内存后，返回一个指向该类型内存地址的指针。同时请注意它同时把分配的内存置为零，也就是类型的零值。
 
-make和new申请的内存不一定分配在堆或栈上，要看逃逸分析。
+都会先进行逃逸分析，然后再进行内存分配。
 
 ## 并发编程
 
@@ -1944,11 +1945,14 @@ func (m *Mutex) Unlock() {
    更充分的利用CPU，尽量避免协程切换
 
 2. 自旋条件;
+
    1. 多CPU
    2. 当前协程为了获取此锁进入自旋数量<4
    3. 当前机器上至少存在一个正在运行的处理器P且其运行队列为空
-   总结：当CPU闲着的时候可以让它忙一下。
+      总结：当CPU闲着的时候可以让它忙一下。
+
 ##### 饥饿模式
+
    当自旋的协程每次都抢到锁，为了防止正常阻塞的等待锁的协程不被饿死，当协程等待时间超过1ms时就会启动饥饿模式，处于饥饿模式下，不会启动自旋过程，也即一旦有协程释放了锁，那么一定会唤醒协程，被唤醒的协程将会成功获取锁，同时也会把等待计数减1。
    如果当前协程是最后一个协程或者等待时间小于1ms就恢复为普通模式
 
@@ -2033,7 +2037,6 @@ func (rw *RWMutex) RUnlock() {
 使用`channel`实现
 
 ```go
-
 const RWMutexMaxReaders = 1 << 30 //一个无法达到的最大读数量
 
 type RWMutex struct {
@@ -2604,18 +2607,19 @@ type call struct {
 
 1. 上推节点的操作更快。假如最下层某个节点的值被修改为最小，同样上推到堆顶的操作，N
    叉堆需要的比较次数只有二叉堆的logv2倍。
+
 2. 对缓存更友好。二叉堆对数组的访问范围更大，更加随机，而N叉堆则更集中于数组的
    上部，这就对缓存更加友好，有利于提高性能。
 
-1. Go1.10之前由全局唯一四叉堆维护
+3. Go1.10之前由全局唯一四叉堆维护
 
    所有go程对计时器操作都会争夺互斥锁，性能消耗大
 
-2. Go1.10之后将全局四叉堆分为64个小的四叉堆
+4. Go1.10之后将全局四叉堆分为64个小的四叉堆
 
    理想情况下，堆数和处理器数量相同，但是如果处理器数量超过64,则可能多个处理器上的计时器就在一个桶中，每个桶由一个go程去处理。但是这个go程造成处理器和线程之间频繁切换引起性能问题
 
-3. Go1.13之后采用网络轮训器方式
+5. Go1.13之后采用网络轮训器方式
 
    所有计时器都采用最小四叉堆的形式存放在处理器`P`中，计时器都交给处理器的网络轮训=器和调度器来触发。
 
@@ -2640,16 +2644,16 @@ type call struct {
 
    2. 写入：    
       1.  nil：阻塞
-      2. 满：阻塞
-      3. 未满：写入值
-      4. 关闭：panic
-      5. 只读：编译错误
+      2.  满：阻塞
+      3.  未满：写入值
+      4.  关闭：panic
+      5.  只读：编译错误
    3. close    
-         1. nil：panic
-         2. open未空：关闭chan，直到通道耗尽，然后读取默认值
-         3. open空：关闭chan，读取默认值
-         4. close：panic
-         5. 只读：编译错误
+      1. nil：panic
+      2. open未空：关闭chan，直到通道耗尽，然后读取默认值
+      3. open空：关闭chan，读取默认值
+      4. close：panic
+      5. 只读：编译错误
 
 
 #### 结构
@@ -2974,7 +2978,7 @@ func closechan(c *hchan) {
 
 - 通过 read 和 dirty 两个字段将读写分离，读的数据存在只读字段 read 上，将最新写入的数据则存在 dirty 字段上
 - 读取时会先查询 read，不存在再查询 dirty，写入时则只写入 dirty
--  读取 read 并不需要加锁，而读或写 dirty 都需要加锁
+- 读取 read 并不需要加锁，而读或写 dirty 都需要加锁
 - 另外有 misses 字段来统计 read 被穿透的次数（被穿透指需要读 dirty 的情况），超过一定次数则将 dirty 数据同步到 read 上
 - 对于删除数据则直接通过标记来延迟删除
 
@@ -3092,6 +3096,102 @@ func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool) {
 }
 ```
 
+### 控制协程数量
+
+#### 缓冲chan+sync
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+    "sync"
+    "runtime"
+)
+
+var wg = sync.WaitGroup{}
+
+func busi(ch chan bool, i int) {
+
+    fmt.Println("go func ", i, " goroutine count = ", runtime.NumGoroutine())
+
+    <-ch
+
+    wg.Done()
+}
+
+func main() {
+    //模拟用户需求go业务的数量
+    task_cnt := math.MaxInt64
+
+    ch := make(chan bool, 3)
+
+    for i := 0; i < task_cnt; i++ {
+		wg.Add(1)
+
+        ch <- true
+
+        go busi(ch, i)
+    }
+
+	  wg.Wait()
+}
+```
+
+#### 无缓冲chan+工作池
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+    "sync"
+    "runtime"
+)
+
+var wg = sync.WaitGroup{}
+
+func busi(ch chan int) {
+
+    for t := range ch {
+        fmt.Println("go task = ", t, ", goroutine count = ", runtime.NumGoroutine())
+        wg.Done()
+    }
+}
+
+func sendTask(task int, ch chan int) {
+    wg.Add(1)
+    ch <- task
+}
+
+func main() {
+
+    ch := make(chan int)   //无buffer channel
+
+    goCnt := 3              //启动goroutine的数量
+    for i := 0; i < goCnt; i++ {
+        //启动go
+        go busi(ch)
+    }
+
+    taskCnt := math.MaxInt64 //模拟用户需求业务的数量
+    for t := 0; t < taskCnt; t++ {
+        //发送任务
+        sendTask(t, ch)
+    }
+
+	  wg.Wait()
+}
+```
+
+这里实际上是将任务的发送和执行做了业务上的分离。使得消息出去，输入SendTask的频率可设置、执行Goroutine的数量也可设置。也就是既控制输入(生产)，又控制输出(消费)。
+
+![img](https://github.com/aceld/golang/raw/main/images/151-goroutines5.jpeg)
+
+
+
 ### GMP
 
 > 推荐阅读:https://www.yuque.com/aceld/golang/srxd6d
@@ -3184,19 +3284,21 @@ Goroutine特点：
 ##### P和M
 
 1. 数量
-	1. P数量
-		由启动时环境变量`$GOMAXPROCS`或者是由`runtime`的方法`GOMAXPROCS()`决定。这意味着在程序执行的任意时刻都只有`$GOMAXPROCS`个goroutine在同时运行。
-	2. M的数量:
-		   - go语言本身的限制：go程序启动时，会设置M的最大数量，默认10000.但是内核很难支持这么多的线程数，所以这个限制可以忽略。
-		   - runtime/debug中的SetMaxThreads函数，设置M的最大数量
-   	   - 一个M阻塞了，会创建新的M。
-   
+
+   1. P数量
+      由启动时环境变量`$GOMAXPROCS`或者是由`runtime`的方法`GOMAXPROCS()`决定。这意味着在程序执行的任意时刻都只有`$GOMAXPROCS`个goroutine在同时运行。
+   2. M的数量:
+      - go语言本身的限制：go程序启动时，会设置M的最大数量，默认10000.但是内核很难支持这么多的线程数，所以这个限制可以忽略。
+        - runtime/debug中的SetMaxThreads函数，设置M的最大数量
+        - 一个M阻塞了，会创建新的M。
+
    M和P没绝对关系，一个M阻塞P去创建或切换其他M。
-   
+
 2. 创建时间
 
-  1. P何时创建：运行时就会根据最大数量来创建
-  2. M何时创建：没有M来关联P，P就会去寻找或者创建新的M。
+  3. P何时创建：运行时就会根据最大数量来创建
+
+  4. M何时创建：没有M来关联P，P就会去寻找或者创建新的M。
 
 
 ##### 调度器设计策略
@@ -3325,8 +3427,8 @@ LINUX 中进程无法直接操作 I/O 设备，其必须通过系统调用请求
 
 所以，对于一个网络输入操作通常包括两个不同阶段：
 
-- 等待网络数据到达网卡→读取到内核缓冲区，数据准备好；
-- 从内核缓冲区复制数据到进程空间。
+1. 等待网络数据到达网卡→读取到内核缓冲区，数据准备好；
+2. 从内核缓冲区复制数据到进程空间。
 
 ##### 阻塞IO模型
 
@@ -3376,13 +3478,17 @@ LINUX 中进程无法直接操作 I/O 设备，其必须通过系统调用请求
 
 ![img](https://ask.qcloudimg.com/http-save/yehe-2728002/bbw4pzrbed.png?imageView2/2/w/1620)
 
-##### 同步和异步IO
+**同步和异步IO**
 
-- 同步 IO：（导致请求进程阻塞，直到 I/O 操作完成）用户进程发出 IO 调用，去获取 IO 设备数据，双方的数据要经过内核缓冲区同步，完全准备好后，再复制返回到用户进程。而复制返回到用户进程会导致请求进程阻塞，直到 I/O 操作完成。
+主要是指访问数据的机制 (即实际 I/O 操作的完成方式)
 
-- 异步 IO：（不导致请求进程阻塞。）用户进程发出 IO 调用，去获取 IO 设备数据，并不需要同步，内核直接复制到进程，整个过程不导致请求进程阻塞。
+**同步**一般指主动请求并等待 I/O 操作完毕的方式，I/O 操作未完成前，会导致应用进程挂起
+
+而**异步**是指用户进程触发 IO 操作以后便开始做自己的事情，而当 IO 操作已经完成的时候会得到 IO完成的通知（异步的特点就是通知）, 这可以使进程在数据读写时也不阻塞。
 
 所以， 阻塞 IO 模型、非阻塞 IO 模型、IO 复用模型、信号驱动的 IO 模型者为同步 IO 模型，只有异步 IO 模型是异步 IO。
+
+**阻塞或者非阻塞 I/O** 主要是指 I/O 操作第一阶段的完成方式 (进程访问的数据如果尚未就绪)，即数据还未准备好的时候，应用进程的表现，如果这里进程挂起，则为阻塞 I/O，否则为非阻塞 I/O。说白了就是阻塞和非阻塞是针对于进程在访问数据的时候，根据 IO操作的就绪状态来采取的不同方式，说白了是一种读取或者写入操作函数的实现方式，**阻塞方式下读取或者写入函数将一直等待**，**而非阻塞方式下，读取或者写入函数会立即返回一个状态值。**
 
 #### 多模块
 
@@ -3491,8 +3597,8 @@ func (c *pollCache) free(pd *pollDesc) {
 2. 如何向网络轮询器加入待监控的任务；
 3. 如何从网络轮询器获取触发的事件；
 
-1. 因为不同 I/O 多路复用模块的实现大同小异，本节会使用 Linux 操作系统上的 `epoll` 实现；
-2. 因为处理读事件和写事件的逻辑类似，本节会省略写事件相关的代码；
+4. 因为不同 I/O 多路复用模块的实现大同小异，本节会使用 Linux 操作系统上的 `epoll` 实现；
+5. 因为处理读事件和写事件的逻辑类似，本节会省略写事件相关的代码；
 
 ##### 初始化
 
@@ -3790,6 +3896,677 @@ Goroutine 在被唤醒之后会意识到当前的 I/O 操作已经超时，可�
 
 ## 内存管理
 
+> 刘丹冰yyds！
+>
+> https://www.yuque.com/aceld/golang/qzyivn#cDuEt
+
+Golang的内存管理就是基于TCMalloc的核心思想来构建的。
+
+### TCMalloc
+
+TCMalloc最大优势就是每个线程都会独立维护自己的内存池。
+
+所有go程共享的内存池模型：
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651132777839-f6077cf7-f8e4-40d0-9fa0-1167208508da.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_58%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+缺点：应用方内存申请需要和全局BufPool打交道，为了线程安全需要频繁加锁和解锁
+
+#### 层级模型
+
+TCMalloc则为每个线程预分配一块缓存，每个线程在申请内存的时候会先从**线程缓存池**中申请。每个**线程缓存池**共享一块**中心缓存**。
+
+![TCMalloc模型图](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651132869540-a130e8b3-1f7d-45ec-8413-52bba81426a0.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_57%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+好处：线程独立缓存减少加锁发生次数
+
+ThreadCache 作为线程独立的第一交互内存，访问无需加锁，CentralCache 则作为 ThreadCache 临时补充缓存。
+
+**内存对象划分**：
+
+| **对象** | **容量**     |
+| -------- | ------------ |
+| 小对象   | (0,256KB]    |
+| 中对象   | (256KB, 1MB] |
+| 大对象   | (1MB, +∞)    |
+
+ThreadCache和CentralCache可以用来解决小对象内存块的申请。
+
+而对于中，大对象的内存申请，TCMalloc提供一个全局共享的内存堆**PageHeap**。当然对其进行操作需要进行加锁。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133032054-ea888b96-0fb0-46ea-ac26-4c38abc2b66f.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_89%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1038%2Climit_0)
+
+页堆主要时当中心缓存没空间时向其申请，过多时退还，以及线程在申请大对象超过Cache的内存单元块单元大小时也会直接向页堆申请。
+
+#### 基础结构
+
+##### Page
+
+TCMalloc将虚拟内存划分为多份同等大小的Page，每个Page默认`8KB`，可以通过地址指针+偏移量来确定Page位置。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133095495-53138cb4-89b8-4833-ac41-7957a1c19354.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_82%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_959%2Climit_0)
+
+##### Span
+
+多个连续的 Page 称之为是一个 Span，其定义含义有操作系统的管理的页表相似。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133255704-7c07cb59-d879-468f-a925-d3494454cb7d.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_82%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_960%2Climit_0)
+
+TCMalloc 是以 Span 为单位向操作系统申请内存的。每个 Span 记录了第一个起始 Page 的编号 Start，和一共有多少个连续 Page 的数量 Length。
+
+同时**span之间通过双向链表来连接**。
+
+##### Size Class
+
+在**256KB以内的小对象**会被TCMalloc划分为多个内存刻度，同一个刻度下的内存集合称为**Size Class**.
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133299709-8c33bad3-a31f-4844-b07c-ad54a0dc64d4.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_67%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+每个`Size Class`都对应一个字节大小。在申请小对象内存时，TCMalloc会根据申请字节向上取一个`Size Class`的Span（多个page组成）的内存块给使用者。
+
+##### ThreadCache
+
+`ThreadCache`即线程自己的缓存。其对于每个`SizeClass`都有一个对应的`FreeList`，表示当前缓存中还有多少空闲的内存可用。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133403346-3d07b578-45df-41b1-880e-d1a591d106ff.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_97%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1139%2Climit_0)
+
+流程：使用者申请小对象内存直接通过`ThreadCache`获取对应`Size Class`的一个`Span`，如果对应的`Size Class`下的链表为nil，则`ThreadCache`会向`ThreadCache`申请空间，线程用完内存后也是直接归还到本线程对应刻度下的span双向链表中。
+
+##### CentralCache
+
+`CentralCache`是所有线程共用的。其结构和`ThreadCache`相似，各个刻度的`span`链表被放置在`CentralFreeList`之中。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133530033-bd9265dc-fd49-4a77-a845-f175ab317ea9.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_97%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1140%2Climit_0)
+
+流程：`ThreadCache`在内存不够时会向`CentralFreeList`申请指定刻度的内存，当其内存多余时也会归还给`CentralFreeList`。`PageHeap`和`CentralFreeList`关系也类似。
+
+##### PageHeap
+
+Head与CentralCache不同的是CentralCache是与ThreadCache布局一模一样的缓存，主要是起到针对ThreadCache的一层二级缓存作用，**且只支持小对象内存分配**。**而PageHeap则是针对CentralCache的三级缓存,弥补对于中对象内存和大对象内存的分配**，PageHeap也是直接和操作系统虚拟内存衔接的一层缓存。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133596465-fd16a3cc-256a-464c-a066-b896043a9f63.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_101%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1178%2Climit_0)
+
+当一二级缓存都无法分配对应的内存时，三次缓存则通过系统调用来从虚拟内存的堆区中获取内存来填充。
+
+`PageHeap`内部的`Span`管理采取两种方式
+
+1. `128`个page以内使用链表
+2. `128`以上的page则通过有序集合来存放
+
+#### 小对象分配
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133672724-0ac13b26-1623-444a-8c81-0b2120b2e2fa.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_80%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_938%2Climit_0)
+
+（1）Thread 用户线程应用逻辑申请内存，当前 Thread 访问对应的 ThreadCache 获取内存，此过程不需要加锁。
+
+（2）ThreadCache 的得到申请内存的 SizeClass（一般向上取整，大于等于申请的内存大小），通过 SizeClass 索引去请求自身对应的 FreeList。
+
+（3）判断得到的 FreeList 是否为非空。
+
+（4）如果 FreeList 非空，则表示目前有对应内存空间供 Thread 使用，得到 FreeList 第一个空闲 Span 返回给 Thread 用户逻辑，流程结束。
+
+（5）如果 FreeList 为空，则表示目前没有对应 SizeClass 的空闲 Span 可使用，请求 CentralCache 并告知 CentralCache 具体的 SizeClass。
+
+（6）CentralCache 收到请求后，加锁访问 CentralFreeList，根据 SizeClass 进行索引找到对应的 CentralFreeList。
+
+（7）判断得到的 CentralFreeList 是否为非空。
+
+（8）如果 CentralFreeList 非空，则表示目前有空闲的 Span 可使用。返回多个 Span，将这些 Span（除了第一个 Span）放置 ThreadCache 的 FreeList 中，并且将第一个 Span 返回给 Thread 用户逻辑，流程结束。
+
+（9）如果 CentralFreeList 为空，则表示目前没有可用是 Span 可使用，向 PageHeap 申请对应大小的 Span。
+
+（10）PageHeap 得到 CentralCache 的申请，加锁请求对应的 Page 刻度的 Span 链表。
+
+（11）PageHeap 将得到的 Span 根据本次流程请求的 SizeClass 大小为刻度进行拆分，分成 N 份 SizeClass 大小的 Span 返回给 CentralCache，如果有多余的 Span 则放回 PageHeap 对应 Page 的 Span 链表中。
+
+（12）CentralCache 得到对应的 N 个 Span，添加至 CentralFreeList 中，跳转至第（8）步。
+
+#### 中对象分配
+
+中对象是在`256KB-1M`之间的内存。TCMalloc会直接从`Pageheap`获取。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133803693-486e9b4a-ffb1-4932-a989-1df013b601c1.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_71%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+PageHeap将128个Page以内大小的Span定义为小Span，将128个Page以上大小的Span定义为大Span。
+
+所以中对象划分为小span进行分配。
+
+（1）Thread 用户逻辑层提交内存申请处理，如果本次申请内存超过 256KB 但不超过 1MB 则属于中对象申请。TCMalloc 将直接向 PageHeap 发起申请 Span 请求。
+
+（2）PageHeap 接收到申请后需要判断本次申请是否属于小 Span（128 个 Page 以内），如果是，则走小 Span，即中对象申请流程，如果不是，则进入大对象申请流程。
+
+（3）PageHeap 根据申请的 Span 在小 Span 的链表中向上取整，得到最适应的第 K 个 Page 刻度的 Span 链表。
+
+（4）得到第 K 个 Page 链表刻度后，将 K 作为起始点，向下遍历找到第一个非空链表，直至 128 个 Page 刻度位置，找到则停止，将停止处的非空 Span 链表作为提供此次返回的内存 Span，将链表中的第一个 Span 取出。如果找不到非空链表，则当错本次申请为大 Span 申请，则进入大对象申请流程。
+
+（5）假设本次获取到的 Span 由 N 个 Page 组成。PageHeap 将 N 个 Page 的 Span 拆分成两个 Span，其中一个为 K 个 Page 组成的 Span，作为本次内存申请的返回，给到 Thread，另一个为 N-K 个 Page 组成的 Span，重新插入到 N-K 个 Page 对应的 Span 链表中。
+
+#### 大对象分配
+
+对于超过 128 个 Page（即 1MB）的内存分配则为大对象分配流程。大对象分配与中对象分配情况类似，Thread 绕过 ThreadCache 和 CentralCache，直接向 PageHeap 获取
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651133987470-28f3feb2-8a9e-45be-a41b-596b1bd54e8d.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_81%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_950%2Climit_0)
+
+进入大对象分配流程除了申请的 Span 大于 128 个 Page 之外，对于中对象分配如果找不到非空链表也会进入大对象分配流程
+
+（1）Thread 用户逻辑层提交内存申请处理，如果本次申请内存超过 1MB 则属于大对象申请。TCMalloc 将直接向 PageHeap 发起申请 Span      。
+
+（2）PageHeap 接收到申请后需要判断本次申请是否属于小 Span（128 个 Page 以内），如果是，则走小 Span 中对象申请流程（上一节已介绍），如果不是，则进入大对象申请流程
+
+（3）PageHeap根据Span的大小按照Page单元进行除法运算，向上取整，得到最接近Span的且大于Span的Page倍数K,此时的K应该是大于128。如果是从中对象流程分过来的（中对象申请流程可能没有非空链表提供Span),则K值应该小于128。
+
+（4）搜索 Large Span Set 集合，找到不小于 K 个 Page 的最小 Span（N 个 Page）。如果没有找到合适的 Span，则说明 PageHeap 已经无法满足需求，则向操作系统虚拟内存的堆空间申请一堆内存，将申请到的内存安置在 PageHeap 的内存结构中，重新执行（3）步骤
+
+（5）将从 Large Span Set 集合得到的 N 个 Page 组成的 Span 拆分成两个 Span，K 个 Page 的 Span 直接返回给 Thread 用户逻辑，N-K 个 Span 退还给 PageHeap。其中如果 N-K 大于 128 则退还到 Large Span Set 集合中，如果 N-K 小于 128，则退还到 Page 链表中。
+
+### Go 堆内存管理
+
+#### 层级模型
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651134285363-999c7495-7834-4785-a6ea-c44b4615ff19.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_58%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+#### 结构模型
+
+Golang 内存管理中依然保留 TCMalloc 中的 Page、Span、Size Class 等概念
+
+1. Page
+
+   与 TCMalloc 的 Page 一致。Golang 内存管理模型延续了 TCMalloc 的概念，一个 Page 的大小依然是 8KB。Page 表示 Golang 内存管理与虚拟内存交互内存的最小单元。操作系统虚拟内存对于 Golang 来说，依然是划分成等分的 N 个 Page 组成的一块大内存公共池
+
+2. mSpan
+
+   TCMalloc中的Span一致。mSpan概念依然延续TCMalloc中的Span概念，在Golang中将Span的名称改为mSpan，依然表示一组连续的Page。
+
+3. Size Class相关
+
+   1. Object Size
+
+      指协程应用逻辑一次向Golang内存申请的对象Object大小。
+
+      Object时Go内存管理模块更细化的管理单元。一个`span`在初始化时会被分为多个`Object`。逻辑层向Go内存模型取内存实际是获取`Object`。
+
+      ![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651134337384-3b5b18a9-63a2-41eb-89fb-d7a030b1e569.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_79%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+      **注意 Page是Golang内存管理与操作系统交互衡量内存容量的基本单元，Golang内存管理内部本身用来给对象存储内存的基本单元是Object。**
+
+   2. Size Clase
+
+      Golang内存管理中的Size Class与TCMalloc所表示的设计含义是一致的，都表示一块内存的所属规格或者刻度。Golang内存管理中的Size Class是针对Object Size来划分内存的。也是划分Object大小的级别。比如Object Size在1Byte~8Byte之间的Object属于Size Class 1级别，Object Size 在8B~16Byte之间的属于Size Class 2级别。
+
+   3. Span Class
+
+      这个是 Golang 内存管理额外定义的规格属性，是针对 Span 来进行划分的，是 Span 大小的级别。一个 Size Class 会对应两个 Span Class，其中一个 Span 为存放需要 GC 扫描的对象（包含指针的对象），另一个 Span 为存放不需要 GC 扫描的对象（不包含指针的对象）
+
+      ![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651134377320-3f71752d-65fa-4081-a255-09c387f23a65.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_70%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+      `Size Class`明细
+
+      ```go
+      //usr/local/go/src/runtime/sizeclasses.go
+      
+      package runtime
+      
+      // 标题Title解释：
+      // [class]: Size Class
+      // [bytes/obj]: Object Size，一次对外提供内存Object的大小
+      // [bytes/span]: 当前Object所对应Span的内存大小
+      // [objects]: 当前Span一共有多少个Object
+      // [tail wastre]: 为当前Span平均分层N份Object，会有多少内存浪费
+      // [max waste]: 当前Size Class最大可能浪费的空间所占百分比
+      
+      // class  bytes/obj  bytes/span  objects  tail waste  max waste
+      //     1          8        8192     1024           0        87.50%
+      //     2         16        8192      512           0        43.75%
+      //     3         32        8192      256           0        46.88%
+      //     4         48        8192      170          32        31.52%
+      //     5         64        8192      128           0        23.44%
+      //     6         80        8192      102          32        19.07%
+      //     7         96        8192       85          32        15.95%
+      //     8        112        8192       73          16        13.56%
+      ...
+      ```
+
+##### MCache
+
+类似于TCMalloc的`ThreadCache`，协程访问不需要加锁。
+
+`MCache`绑定在`处理器P`中，因为实际可运行的M数量和`P`相同。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651134640677-2a153c96-b7e8-46bc-86f3-dfaf50087329.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_84%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_982%2Climit_0)
+
+**MCache 中每个 Span Class 都会对应一个 MSpan**，不同 Span Class 的 MSpan 的总体长度不同，参考 runtime/sizeclasses.go 的标准规定划分。比如对于 Span Class 为 4 的 MSpan 来说，存放内存大小为 1Page，即 8KB。每个对外提供的 Object 大小为 16B，共存放 512 个 Object。其他 Span Class 的存放方式类似。当其中某个 Span Class 的 MSpan 已经没有可提供的 Object 时，MCache 则会向 MCentral 申请一个对应的 MSpan。
+
+注：申请size时是0则返回固定地址。
+
+##### MCentral
+
+当 MCache 中某个 Size Class 对应的 Span 被一次次 Object 被上层取走后，如果出现当前 Size Class 的 Span 空缺情况，MCache 则会向 MCentral 申请对应的 Span。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651134740690-c1fc15a5-af2a-474c-adaa-ddc4bb05a5e3.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_89%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1036%2Climit_0)
+
+和TCMalloc类似，本层的span取完之后向上一层请求。
+
+**其中协程逻辑层与MCache的内存交换单位是Object，MCache与MCentral的内存交换单位是Span，而MCentral与MHeap的内存交换单位是Page。**
+
+**MCentral 与 TCMalloc 中的 Central 不同的是 MCentral 针对每个 Span Class 级别有两个 Span 链表，而 TCMalloc 中的 Central 只有一个**。
+
+**MCentral与MCCache不同的是，每个级别保存的不是一个Span，而是一个Span List链表。与TCMalloc中的Central不同的是，MCentral每个级别都保存了两个Span List。**
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651134816735-43c615ce-3c3c-485a-9ae2-e36dca963f95.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_88%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1032%2Climit_0)
+
+> **注意 图 38 中 MCentral 是表示一层抽象的概念，实际上每个 Span Class 对应的内存数据结构是一个 mcentral，即在 MCentral 这层数据管理中，实际上有 Span Class 个 mcentral 小内存管理单元。**
+
+1）NonEmpty Span List（非空，退还的span放里面）
+表示还有可用空间的 Span 链表。链表中的所有 Span 都至少有 1 个空闲的 Object 空间。如果 MCentral 上游 MCache 退还 Span，会将退还的 Span 加入到 NonEmpty Span List 链表中。
+2）Empty Span List（可能为空，分配的span放这里）
+表示没有可用空间的 Span 链表。该链表上的 Span 都不确定否还有有空闲的 Object 空间。如果 MCentral 提供给一个 Span 给到上游 MCache，那么被提供的 Span 就会加入到 Empty List 链表中。
+
+> 注意 在 Golang 1.16 版本之后，MCentral 中的 NonEmpty Span List 和 Empty Span List
+> 均由链表管理改成集合管理，分别对应 Partial Span Set 和 Full Span Set。虽然存储的数据结构有变化，但是基本的作用和职责没有区别。
+
+```go
+// Go V1.14
+//usr/local/go/src/runtime/mcentral.go
+
+// Central list of free objects of a given size.
+// go:notinheap
+type mcentral struct {
+lock      mutex      //申请MCentral内存分配时需要加的锁
+
+spanclass spanClass //当前哪个Size Class级别的
+
+// list of spans with a free object, ie a nonempty free list
+// 还有可用空间的Span 链表
+nonempty  mSpanList 
+
+// list of spans with no free objects (or cached in an mcache)
+// 没有可用空间的Span链表，或者当前链表里的Span已经交给mcache
+empty     mSpanList 
+
+// nmalloc is the cumulative count of objects allocated from
+// this mcentral, assuming all spans in mcaches are
+// fully-allocated. Written atomically, read under STW.
+// nmalloc是从该mcentral分配的对象的累积计数
+// 假设mcaches中的所有跨度都已完全分配。
+// 以原子方式书写，在STW下阅读。
+nmalloc uint64
+}
+```
+
+```go
+//Go V1.16+
+//usr/local/go/src/runtime/mcentral.go
+
+//…
+
+type mcentral struct {
+// mcentral对应的spanClass
+spanclass spanClass
+
+partial  [2]spanSet // 维护全部空闲的Span集合
+full     [2]spanSet // 维护存在非空闲的Span集合
+}
+
+//…
+```
+
+注：分为两个集合元素的数组是为了GC，一个集合是已扫描，一个是未扫描
+
+##### MHeap
+
+Golang 内存管理的 MHeap 依然是继承 TCMalloc 的 PageHeap 设计
+
+**MHeap 是对内存块的管理对象，是通过 Page 为内存单元进行管理,一系列的Page被称为一个HeapArena**
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135097610-8b18c759-6207-435d-80d4-616ce62de8d3.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_52%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+一个`HeapArena`占用`64MB`，其中是多个`mspan`，多个连续的基本单位`page`组成一个`mspan`。
+
+所有的`HeapArena`组成的集合是一个`Arena`，即 MHeap 针对堆内存的管理。
+
+所有的 HeapArena 组成的集合是一个 Arenas，也就是 MHeap 针对堆内存的管理。MHeap 是 Golang 进程全局唯一的所以访问依然加锁。图中又出现了 MCentral，因为 MCentral 本也属于 MHeap 中的一部分。只不过会优先从 MCentral 获取内存，如果没有 MCentral 会从 Arenas 中的某个 HeapArena 获取 Page。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135153113-4db62f09-063b-4470-9fa9-1229150f703c.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_99%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1159%2Climit_0)
+
+MHeap 中 HeapArena 占用了绝大部分的空间，其中每个 HeapArean 包含一个 bitmap，其作用是用于标记当前这个 HeapArena 的内存使用情况。其主要是服务于 GC 垃圾回收模块，bitmap 共有两种标记，一个是标记对应地址中是否存在对象，一个是标记此对象是否被 GC 模块标记过，所以当前 HeapArena 中的所有 Page 均会被 bitmap 所标记
+
+从图 3.40 中可以看出，MCentral 实际上就是隶属于 MHeap 的一部分，从数据结构来看，每个 Span Class 对应一个 MCentral，而之前在分析 Golang 内存管理中的逻辑分层中，是将这些 MCentral 集合统一归类为 MCentral 层。
+
+#### Tiny对象分配
+
+| TCMalloc | Golang    |
+| -------- | --------- |
+| 小对象   | Tiny 对象 |
+| 中对象   | 小对象    |
+| 大对象   | 大对象    |
+
+在`MCache`中存在一个`Tiny`存储空间。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135206587-7442cb63-77a7-4b87-8822-db91367db164.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_84%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_986%2Climit_0)
+
+Tiny空间则是从`Size Class`中获取一个16B的Object，从而减少一些类似`int32、 byte、 bool`所造成的空间浪费。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135248063-4376ca60-ef0e-4463-a648-e87ffe2d7e51.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_25%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
+
+所以go尽量不使用`Size Class=1`的Span，而是同一将分配空间小于16B的申请归类为`Tiny`对象。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135299397-38b04b81-3179-44e4-81ca-bb476b69f22f.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_73%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_937%2Climit_0)
+
+（1）P 向 MCache 申请微小对象如一个 Bool 变量。如果申请的 Object 在 Tiny 对象的大小范围则进入 Tiny 对象申请流程，否则进入小对象或大对象申请流程。
+
+（2）判断申请的 Tiny 对象是否包含指针，如果包含则进入小对象申请流程（不会放在 Tiny 缓冲区，因为需要 GC 走扫描等流程）。
+
+（3）如果 Tiny 空间的 16B 没有多余的存储容量，则从 Size Class = 2（即 Span Class = 4 或 5）的 Span 中获取一个 16B 的 Object 放置 Tiny 缓冲区。
+
+（4）将 1B 的 Bool 类型放置在 16B 的 Tiny 空间中，以字节对齐的方式。
+
+#### 小对象分配
+
+对于对象在(16B~32B)的内存分配，Go会采取小对象分配。
+
+分配小对象的标准流程是按照 Span Class 规格匹配的。在之前介绍 MCache 的内部构造已经介绍了，MCache 一共有 67 份 Size Class 其中 Size Class 为 0 的做了特殊的处理直接返回一个固定的地址。Span Class 为 Size Class 的二倍，也就是从 0 至 133 共 134 个 Span Class。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135402859-c6404c6a-f0fd-4bb9-bbef-0c5286b0b2a4.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_100%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1166%2Climit_0)
+
+（1）首先协程逻辑层 P 向 Golang 内存管理申请一个对象所需的内存空间。
+
+（2）MCache 在接收到请求后，会根据对象所需的内存空间计算出具体的大小 Size。
+
+（3）判断 Size 是否小于 16B，如果小于 16B 则进入 Tiny 微对象申请流程，否则进入小对象申请流程。
+
+（4）根据 Size 匹配对应的 Size Class 内存规格，再根据 Size Class 和该对象是否包含指针，来定位是从 noscan Span Class 还是 scan Span Class 获取空间，没有指针则锁定 noscan。
+
+（5）在定位的 Span Class 中的 Span 取出一个 Object 返回给协程逻辑层 P，P 得到内存空间，流程结束。
+
+（6）如果定位的 Span Class 中的 Span 所有的内存块 Object 都被占用，则 MCache 会向 MCentral 申请一个 Span。
+
+（7）MCentral 收到内存申请后，优先从相对应的 Span Class 中的 NonEmpty Span List（或 Partial Set，Golang V1.16+）里取出 Span（多个 Object 组成），NonEmpty Span List 没有则从 Empty List（或 Full Set Golang V1.16+）中取，返回给 MCache。
+
+（8）MCache 得到 MCentral 返回的 Span，补充到对应的 Span Class 中，之后再次执行第（5）步流程。
+
+（9）如果 Empty Span List（或 Full Set）中没有符合条件的 Span，则 MCentral 会向 MHeap 申请内存。
+
+（10）MHeap 收到内存请求从其中一个 HeapArena 从取出一部分 Pages 返回给 MCentral，当 MHeap 没有足够的内存时，MHeap 会向操作系统申请内存，将申请的内存也保存到HeapArena 中的 mspan 中。MCentral 将从 MHeap 获取的由 Pages 组成的 Span 添加到对应的 Span Class 链表或集合中，作为新的补充，之后再次执行第（7）步。
+
+（11）最后协程业务逻辑层得到该对象申请到的内存，流程结束。
+
+#### 大对象分配流程
+
+小对象是在 MCache 中分配的，而大对象是直接从 MHeap 中分配。对于不满足 MCache 分配范围的对象，均是按照大对象分配流程处理
+
+大对象分配流程是协程逻辑层直接向 MHeap 申请对象所需要的适当 Pages，从而绕过从 MCaceh 到 MCentral 的繁琐申请内存流程。
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/26269664/1651135463380-9ee93382-7deb-48c0-ab38-519d679101e4.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_90%2Ctext_5YiY5Li55YawQWNlbGQ%3D%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1057%2Climit_0)
+
+（1）协程逻辑层申请大对象所需的内存空间，如果超过 32KB，则直接绕过 MCache 和 MCentral 直接向 MHeap 申请。
+
+（2）MHeap 根据对象所需的空间计算得到需要多少个 Page。
+
+（3）MHeap 向 Arenas 中的 HeapArena 申请相对应的 Pages。
+
+（4）如果 Arenas 中没有 HeapA 可提供合适的 Pages 内存，则向操作系统的虚拟内存申请，且填充至 Arenas 中。
+
+（5）MHeap 返回大对象的内存空间。
+
+（6）协程逻辑层 P 得到内存，流程结束。
+
+### Go 栈内存管理
+
+栈区的内存一般由编译器自动分配和释放，其中存储着函数的入参以及局部变量，这些参数会随着函数的创建而创建，函数的返回而消亡，一般不会在程序中长期存在，这种线性的内存分配策略有着极高地效率。
+
+#### 寄存器
+
+寄存器 是CPU中最块的存储单元，栈寄存器是 CPU 寄存器中的一种，它的主要作用是跟踪函数的调用栈。应用程序在获取栈空间时只需要移动栈顶指针，非常高效。
+
+#### 逃逸分析
+
+手动分配可能会出现问题：
+
+1. 不需要分配在堆中的元素分配到堆中：浪费空间，效率低
+2. 应该分配在堆上的分配到栈上：悬挂指针，影响内存安全
+
+go语言编译器会自动决定把一个变量放在栈还是放在堆，编译器会做**逃逸分析(escape analysis)**，**当发现变量的作用域没有跑出函数范围，就可以在栈上，反之则必须分配在堆**。（堆中的变量引用了栈上的变量）
+
+> 可以在函数定义时添加 `//go:noinline` 编译指令来阻止编译器内联函数
+
+##### 逃逸规则
+
+一般而言，给**一个引用对象的引用类成员进行赋值**可能出现逃逸现象
+
+Go语言中的引用类型有`func（函数类型），interface（接口类型），slice（切片类型），map（字典类型），channel（管道类型），*（指针类型）`等。
+
+##### 逃逸案例
+
+```go
+// 1. slice 为引用类型，interface{} 为引用类型，所以 二次访问 造成后者逃逸
+data := []interface{}{1,2}
+data[0] = 2
+// 2. map 引用类型，interface{} 引用类型，造成后者逃逸
+data := make(map[string]interface{})
+data["key"] = 200
+//3. map 引用类型，interface{} 引用类型, 造成kv逃逸
+data := make(map[interface{}]interface{})
+data[100] = 200
+//4. map 引用, []string 引用，造成后者逃逸
+data := make(map[string][]string)
+data["key"] = []string{"value"}
+//5. [] 引用，*int 引用，后者逃逸
+data := []*int{nil}
+data[0] = &a // a逃逸
+//6. func 引用，*int 引用，导致后者逃逸
+data := 10
+f := foo
+f(&data)
+fmt.Println(data) // data逃逸
+//7. func 引用，[]string 引用，后者逃逸
+s := []string{"aceld"}
+foo(s)
+fmt.Println(s) // s逃逸
+//8. chan 引用，[]string 引用，后者逃逸
+ch := make(chan []string)
+s := []string{"aceld"}
+go func() {
+   ch <- s
+}()
+```
+
+ Golang 中一个函数内局部变量，不管是不是动态 new 出来的，它会被分配在堆还是栈，是由编译器做逃逸分析之后做出的决定。
+
+![image-20220511173652315](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220511173652315.png)
+
+#### 栈内存空间
+
+Go 语言使用用户态线程 Goroutine 作为执行上下文，它的额外开销和默认栈大小都比线程小很多，然而 Goroutine 的栈内存空间和栈结构也在早期几个版本中发生过一些变化：
+
+1. v1.0 ~ v1.1 — 最小栈内存空间为 4KB；
+2. v1.2 — 将最小栈内存提升到了 8KB；
+3. v1.3 — 使用**连续栈** 替换之前版本的分段栈；
+4. v1.4 — 将最小栈内存降低到了 2KB；
+
+> 从 4KB 提升到 8KB 是临时的解决方案，其目的是为了减轻分段栈中的栈分裂对程序的性能影响
+
+##### 分段栈
+
+所有Go程在初始化时会分配一块固定内存空间。
+
+当 Goroutine 调用的函数层级或者局部变量需要的越来越多时，运行时会调用 [`runtime.morestack:go1.2`](https://draveness.me/golang/tree/runtime.morestack:go1.2) 和 [`runtime.newstack:go1.2`](https://draveness.me/golang/tree/runtime.newstack:go1.2) 创建一个新的栈空间，这些栈空间虽然不连续，但是当前 Goroutine 的多个栈空间会以链表的形式串联起来，运行时会通过指针找到连续的栈片段：
+
+![segmented-stacks](https://img.draveness.me/2020-03-23-15849514795874-segmented-stacks.png)
+
+一旦申请的栈空间不需要，运行时就会释放。
+
+分段栈机制虽然能够按需为当前 Goroutine 分配内存并且及时减少内存的占用，但是它也存在两个比较大的问题：
+
+1. 如果当前 Goroutine 的栈几乎充满，那么任意的函数调用都会触发栈扩容，当函数返回后又会触发栈的收缩，如果在一个循环中调用函数，栈的分配和释放就会造成巨大的额外开销，这被称为**热分裂问题**（Hot split）；
+2. 一旦 Goroutine 使用的内存**越过**了分段栈的扩缩容阈值，运行时会触发栈的扩容和缩容，带来额外的工作量；
+
+##### 连续栈
+
+其核心原理是每当程序的栈空间不足时，初始化一片更大的栈空间并将原栈中的所有值都迁移到新栈中，新的局部变量或者函数调用就有充足的内存空间。
+
+扩容操作：
+
+1. 在内存空间中分配更大的栈内存空间；
+
+2. 将旧栈中的所有内容复制到新栈中；
+
+3. **将指向旧栈对应变量的指针重新指向新栈**；
+
+   **指向栈对象的指针不能存在于堆中**，所以指向栈中变量的指针只能在栈上，我们只需要调整栈中的所有变量就可以保证内存的安全了。
+
+4. 销毁并回收旧栈的内存空间；
+
+因为需要拷贝变量和调整指针，连续栈增加了栈扩容时的额外开销，但是通过合理栈缩容机制就能避免热分裂带来的性能问题，在 GC 期间如果 Goroutine 使用了栈内存的四分之一，那就将其内存减少一半，这样在栈内存几乎充满时也只会扩容一次，不会因为函数调用频繁扩缩容。
+
+
+
+
+
+### Go GC
+
+> <a href="https://github.com/aceld/golang/blob/main/5、Golang三色标记+混合写屏障GC模式全分析.md">刘丹冰yyds</a> <a href="https://draveness.me/golang/docs/part3-runtime/ch07-memory/golang-garbage-collector/">Draven也是</a>
+
+垃圾回收(Garbage Collection，简称GC)是编程语言中提供的自动的内存管理机制，自动释放不需要的对象，让出存储器资源，无需程序员手动执行。
+
+Golang中的垃圾回收主要应用三色标记法，GC过程和其他用户goroutine可并发运行，但需要一定时间的**STW(stop the world)**，STW的过程中，CPU不执行用户代码，全部用于垃圾回收，这个过程的影响很大，Golang进行了多次的迭代优化来解决这个问题。
+
+#### Go1.3 标记-清除
+
+##### 标记：从根对象出发查找并标记堆中存活的对象。
+
+1. 暂停程序，分类出可达和不可达的对象，然后做标记
+
+2. 程序找出左右可达的对象并做标记。
+
+   ![img](https://github.com/aceld/golang/raw/main/images/42-GC2.png)
+
+##### 清除：遍历堆中所有未标记的对象，回收未被标记的垃圾对象的内存。
+
+##### 缺点
+
+1. 全程STW，程序卡顿
+2. 标记需要扫描整个堆
+3. 清除数据会产生碎片
+
+流程：
+
+![img](https://github.com/aceld/golang/raw/main/images/54-STW2.png)
+
+#### Go1.5 三色并发标记法
+
+##### 三色？
+
+1. 白色：新创建的对象默认为白色（未被扫描）
+2. 灰色：活跃对象，引用的其他对象会被扫描（即将扫描）
+3. 黑色：活跃对象，本轮扫描中不会被清除（已经扫描完）
+
+##### 普通三色并发标记流程
+
+1. GC开始时会从根节点遍历所有对象，标记为灰色
+2. 按顺序遍历灰色节点，将其引用的白色节点标记为灰色，最后此灰色节点标记为黑色
+3. 重复步骤2,直到没有灰色节点，清除所有白色节点
+
+因为此过程可能会改变指针的引用，导致内存安全性问题所以需要STW。
+
+**灰断开白且黑指向白**：导致被引用对象被清除（这个白色如果有下游，也会被清除）
+
+##### 三色不变性
+
+想让并发或者增量算法中保证正确性，需要满足**两种三色不变性中的一种**
+
+1. **强三色不变性**
+
+   **黑不能指向白**
+
+   ![img](https://github.com/aceld/golang/raw/main/images/60-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E9%97%AE%E9%A2%986.jpeg)
+
+2. **弱三色不变性**
+
+   **黑指向的白必须被灰间接或直接引用**
+
+   ![img](https://github.com/aceld/golang/raw/main/images/61-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E9%97%AE%E9%A2%987.jpeg)
+
+##### 内存屏障
+
+**内存屏障：让CPU或编译器在执行内存相关操作时可以遵循特定约束，使其指令可以顺序化执行。**
+
+垃圾回收机制中的屏障技术类似于一个钩子函数，在用户创建，读取，更新对象指针时执行的一段代码，根据类型不同，分为**读屏障和写屏障**。
+
+##### 插入写屏障：满足强三色不变性(黑到白连接)
+
+在更新和新增节点时，**被引用的白色对象会被标记为灰色。**
+
+但是因为栈空间容量小，速度快。不可以频繁进行函数调用，所以插入写只在堆中使用。
+
+##### 删除写屏障：满足弱三色不变性(灰到白断开)
+
+**被删除的对象，如果自身为白色，那么被标记为灰色。**
+
+![img](https://github.com/aceld/golang/raw/main/images/74-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E5%88%A0%E9%99%A4%E5%86%99%E5%B1%8F%E9%9A%9C3.jpeg)
+
+![img](https://github.com/aceld/golang/raw/main/images/75-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E5%88%A0%E9%99%A4%E5%86%99%E5%B1%8F%E9%9A%9C4.jpeg)
+
+但是这样会导致一个节点即使被删除了最后一个指向它的指针也可以活过这一轮GC。
+
+**所以整个流程就是全部节点并发三色标记一遍，堆空间增加写屏障，然后栈空间STW重新标记一遍，最后清除白色节点。**
+
+##### 缺点
+
+插入写屏障和删除写屏障的短板：
+
+- 插入写屏障：结束时需要STW来重新扫描栈，标记栈上引用的白色对象的存活；
+- 删除写屏障：回收精度低，GC开始时STW扫描堆栈来记录初始快照，这个过程会保护开始时刻的所有存活对象。
+
+#### Go1.18 混合写屏障
+
+Go V1.8版本引入了混合写屏障机制（hybrid write barrier），避免了对栈re-scan的过程，极大的减少了STW的时间。结合了插入写和删除写的优点。
+
+##### 规则
+
+1、GC开始将栈上的可达对象标记为黑色(之后不再进行第二次重复扫描，无需STW)，
+
+2、GC期间，任何在栈上创建的新对象，均为黑色。
+
+3、删除写：被删除的对象标记为灰色。
+
+4、插入写：被添加的对象标记为灰色。
+
+##### 流程
+
+>  注意混合写屏障是GC的一种屏障机制，所以只是当程序执行GC的时候，才会触发这种机制。
+>
+> 屏障技术是不在栈上应用的，因为要保证栈的运行效率
+
+GC开始，扫描栈，将所有可达对象标记为黑。
+
+1. 对象被一个堆对象删除引用，成为栈对象的下游（灰色删除，黑色添加）
+
+   触发删除写，标记白色对象为灰
+
+2. 对象被一个栈对象删除引用，成为另一个栈对象的下游（栈空间无屏障）
+
+   反正也是黑色节点，无影响
+
+3. 对象被一个堆对象删除引用，成为另一个堆对象的下游（灰色删除，黑色添加）
+
+   触发屏障，标记白色对象为灰
+
+4. 对象从一个栈对象删除引用，成为另一个堆对象的下游（灰色断开）
+
+   触发删除写屏障，白色对象标记为灰
+
+##### 总结
+
+GoV1.3- 普通标记清除法，整体过程需要启动STW，效率极低。
+
+GoV1.5- 三色标记法， 堆空间启动写屏障，栈空间不启动，全部扫描之后，需要重新扫描一次栈(需要STW)，效率普通
+
+GoV1.8-三色标记法，混合写屏障机制， 栈空间不启动，堆空间启动。整个过程几乎不需要STW，效率较高。
+
+![image-20221006163538246](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20221006163538246.png)
+
+
+
 ### 自动内存管理
 
 1. 动态内存：程序在运行时根据需求动态分配内存
@@ -3844,15 +4621,447 @@ Goroutine 在被唤醒之后会意识到当前的 I/O 操作已经超时，可�
 
 ![image-20220511165926961](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220511165926961.png)
 
-### Go编译器优化
+## 元编程
 
-![image-20220511172653953](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220511172653953.png)
+### 插件系统
 
-#### 函数内联
+#### 设计原理
 
-![image-20220511173123332](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220511173123332.png)
+Go 语言的插件系统基于 C 语言动态库实现的，所以它也继承了 C 语言动态库的优点和缺点。
 
-#### 逃逸分析
+- 静态库或者静态链接库是由编译期决定的程序、外部函数和变量构成的，编译器或者链接器会将程序和变量等内容拷贝到目标的应用并生成一个独立的可执行对象文件；
+  - 可以独立运行，但是二进制文件较大
+- 动态库或者共享对象可以在多个可执行文件之间共享，程序使用的模块会在运行时从共享对象中加载，而不是在编译程序时打包成独立的可执行文件；
+  - 可以在多个可执行文件之间共享，减少内存占用，一般在运行期间装载。
 
-![image-20220511173652315](https://raja-img.oss-cn-hangzhou.aliyuncs.com/img/image-20220511173652315.png)
+##### 插件系统
+
+通过在主程序和共享库直接定义一系列的约定或者接口，我们可以通过以下的代码动态加载其他人编译的 Go 语言共享对象，这样做的好处是主程序和共享库的开发者不需要共享代码，只要双方的约定不变，修改共享库后也不需要重新编译主程序。
+
+```go
+type Driver interface {
+    Name() string
+}
+
+func main() {
+    p, err := plugin.Open("driver.so")
+    if err != nil {
+	   panic(err)
+    }
+
+    newDriverSymbol, err := p.Lookup("NewDriver")
+    if err != nil {
+        panic(err)
+    }
+	// 寻找任何可以导出的变量或函数
+    newDriverFunc := newDriverSymbol.(func() Driver)
+    newDriver := newDriverFunc()
+    fmt.Println(newDriver.Name())
+}
+```
+
+定义一个接口，并且动态库实现了它，当我们通过 [`plugin.Open`](https://draveness.me/golang/tree/plugin.Open) 读取包含 Go 语言插件的共享库后，获取文件中的 `NewDriver` 符号并转换成正确的函数类型，可以通过该函数初始化新的 `Driver` 并获取它的名字了。
+
+##### 操组系统
+
+Linux 中的共享对象会使用 ELF 格式 [3](https://draveness.me/golang/docs/part4-advanced/ch08-metaprogramming/golang-plugin/#fn:3) 并提供了一组操作动态链接器的接口
+
+```c
+void *dlopen(const char *filename, int flag);
+char *dlerror(void);
+void *dlsym(void *handle, const char *symbol);
+int dlclose(void *handle);
+```
+
+`dlopen` 会根据传入的文件名加载对应的动态库并返回一个句柄（Handle）；我们可以直接使用 `dlsym` 函数在该句柄中搜索特定的符号，也就是函数或者变量，它会返回该符号被加载到内存中的地址。因为待查找的符号可能不存在于目标动态库中，所以在每次查找后我们都应该调用 `dlerror` 查看当前查找的结果。
+
+#### 动态库
+
+Go 语言插件系统的全部实现都包含在 [`plugin`](https://pkg.go.dev/plugin) 中，这个包实现了符号系统的加载和决议。插件是一个带有公开函数和变量的包，我们需要使用下面的命令编译插件：
+
+```bash
+go build -buildmode=plugin ...
+```
+
+该命令会生成一个共享对象 `.so` 文件，当该文件被加载到 Go 语言程序时会使用下面的结构体 [`plugin.Plugin`](https://draveness.me/golang/tree/plugin.Plugin) 表示，该结构体中包含文件的路径以及包含的符号等信息：
+
+```go
+type Plugin struct {
+	pluginpath string // 插件路径
+	syms       map[string]interface{} // 符号信息
+	...
+}
+```
+
+与插件系统相关的两个核心方法分别是用于加载共享文件的 [`plugin.Open`](https://draveness.me/golang/tree/plugin.Open) 和在插件中查找符号的 [`plugin.Plugin.Lookup`](https://draveness.me/golang/tree/plugin.Plugin.Lookup)
+
+##### CGO
+
+包中使用的两个 C 语言函数 [`plugin.pluginOpen`](https://draveness.me/golang/tree/plugin.pluginOpen) 和 [`plugin.pluginLookup`](https://draveness.me/golang/tree/plugin.pluginLookup)；
+
+[`plugin.pluginOpen`](https://draveness.me/golang/tree/plugin.pluginOpen) 只是简单包装了一下标准库中的 `dlopen` 和 `dlerror` 函数并在加载成功后返回指向动态库的句柄：
+
+```c
+static uintptr_t pluginOpen(const char* path, char** err) {
+	void* h = dlopen(path, RTLD_NOW|RTLD_GLOBAL);
+	if (h == NULL) {
+		*err = (char*)dlerror();
+	}
+	return (uintptr_t)h;
+}
+```
+
+[`plugin.pluginLookup`](https://draveness.me/golang/tree/plugin.pluginLookup) 使用了标准库中的 `dlsym` 和 `dlerror` 获取动态库句柄中的特定符号：
+
+```c
+static void* pluginLookup(uintptr_t h, const char* name, char** err) {
+	void* r = dlsym((void*)h, name);
+	if (r == NULL) {
+		*err = (char*)dlerror();
+	}
+	return r;
+}
+```
+
+##### 加载过程
+
+用于加载共享对象的函数 [`plugin.Open`](https://draveness.me/golang/tree/plugin.Open) 会将共享对象文件的路径作为参数并返回 [`plugin.Plugin`](https://draveness.me/golang/tree/plugin.Plugin) 结构
+
+```go
+func Open(path string) (*Plugin, error) {
+	return open(path)
+}
+```
+
+上述函数会调用私有的函数 [`plugin.open`](https://draveness.me/golang/tree/plugin.open) 加载插件，它是插件加载过程的核心函数，我们可以将该函数拆分成以下几个步骤：
+
+1. 准备 C 语言函数 [`plugin.pluginOpen`](https://draveness.me/golang/tree/plugin.pluginOpen) 的参数；
+2. 通过 cgo 调用 [`plugin.pluginOpen`](https://draveness.me/golang/tree/plugin.pluginOpen) 并初始化加载的模块；
+3. 查找加载模块中的 `init` 函数并调用该函数；
+4. 通过插件的文件名和符号列表构建 [`plugin.Plugin`](https://draveness.me/golang/tree/plugin.Plugin) 结构；
+
+> <a href="https://draveness.me/golang/docs/part4-advanced/ch08-metaprogramming/golang-plugin/">推荐阅读</a>
+
+### 代码生成
+
+元编程：使用代码生成代码
+
+Go 语言的代码生成机制会读取包含预编译指令的注释，然后执行注释中的命令读取包中的文件，然后生成新的go代码文件，最后一起编译运行
+
+```go
+//go:generate command argument...
+```
+
+`go generate` 不会被 `go build` 等命令自动执行，该命令需要显式的触发，手动执行该命令时会在文件中扫描上述形式的注释并执行后面的执行命令，需要注意的是 `go:generate` 和前面的 `//` 之间没有空格，这种不包含空格的注释一般是 Go 语言的编译器指令，**而我们在代码中的正常注释都应该保留这个空格。**
+
+代码生成最常见的例子就是官方提供的 `stringer`，这个工具可以扫描如下所示的常量定义，然后为当前常量类型 `Piller` 生成对应的 `String()` 方法：
+
+```go
+package painkiller
+
+//go:generate stringer -type=Pill
+type Pill int
+
+const (
+	Placebo Pill = iota
+	Aspirin
+	Ibuprofen
+	Paracetamol
+	Acetaminophen = Paracetamol
+)
+// 元编程: 为以上类型生成String()
+```
+
+然后执行`go generate`会自动生成`pill_string.go`文件
+
+代码生成的过程可以分成以下两个部分：
+
+1. 扫描 Go 语言源文件，查找待执行的 `//go:generate` 预编译指令；
+2. 执行预编译指令，再次扫描源文件并根据源文件中的代码生成代码；
+
+## 包管理
+
+### Go Modules
+
+Go modules 是 Go 语言的依赖解决方案，发布于 Go1.11，成长于 Go1.12，丰富于 Go1.13，正式于 Go1.14 推荐在生产上使用。
+
+Go moudles 目前集成在 Go 的工具链中，只要安装了 Go，自然而然也就可以使用 Go moudles 了，而 Go modules 的出现也解决了在 Go1.11 前的几个常见争议问题：
+
+1. Go 语言长久以来的依赖管理问题。
+2. “淘汰”现有的 GOPATH 的使用模式。
+3. 统一社区中的其它的依赖管理工具（提供迁移功能）。
+
+### GOPATH 模式
+
+```go
+// GOPATH下
+go
+├── bin // 存储所编译生成的二进制文件。
+├── pkg // 存储预编译的目标文件，以加快程序的后续编译速度。
+└── src // 存储所有.go文件或源代码
+    ├── github.com
+    ├── golang.org
+    ├── google.golang.org
+    ├── gopkg.in
+    ....
+```
+
+- **A. 无版本控制概念.** 在执行`go get`的时候，你无法传达任何的版本信息的期望，也就是说你也无法知道自己当前更新的是哪一个版本，也无法通过指定来拉取自己所期望的具体版本。
+
+- **B.无法同步一致第三方版本号.** 在运行 Go 应用程序的时候，你无法保证其它人与你所期望依赖的第三方库是相同的版本，也就是说在项目依赖库的管理上，你无法保证所有人的依赖版本都一致。
+- **C.无法指定当前项目引用的第三方版本号. ** 你没办法处理 v1、v2、v3 等等不同版本的引用问题，因为 GOPATH 模式下的导入路径都是一样的，都是`github.com/foo/bar`。
+
+### Go Modules 模式
+
+#### go mod命令
+
+| 命令            | 作用                             |
+| --------------- | -------------------------------- |
+| go mod init     | 生成 go.mod 文件                 |
+| go mod download | 下载 go.mod 文件中指明的所有依赖 |
+| go mod tidy     | 整理现有的依赖                   |
+| go mod graph    | 查看现有的依赖结构               |
+| go mod edit     | 编辑 go.mod 文件                 |
+| go mod vendor   | 导出项目所有的依赖到vendor目录   |
+| go mod verify   | 校验一个模块是否被篡改过         |
+| go mod why      | 查看为什么需要依赖某模块         |
+
+#### go mod环境变量
+
+```bash
+$ go env
+GO111MODULE="auto"
+GOPROXY="https://proxy.golang.org,direct"
+GONOPROXY=""
+GOSUMDB="sum.golang.org"
+GONOSUMDB=""
+GOPRIVATE=""
+```
+
+##### GO111MODULE
+
+Go语言提供了 `GO111MODULE `这个环境变量来作为 Go modules 的开关，其允许设置以下参数：
+
+- auto：只要项目包含了 go.mod 文件的话启用 Go modules，目前在 Go1.11 至 Go1.14 中仍然是默认值。
+- on：启用 Go modules，推荐设置，将会是未来版本中的默认值。
+- off：禁用 Go modules，不推荐设置。
+
+设置：`go env -w GO111MODULE=on`
+
+##### GOPROXY
+
+这个环境变量主要是用于设置 Go 模块代理（Go module proxy）,其作用是用于使 Go 在后续拉取模块版本时直接通过镜像站点来快速拉取。
+
+GOPROXY 的默认值是：`https://proxy.golang.org,direct`
+
+`proxy.golang.org`国内访问不了,需要设置国内的代理.
+
+- 阿里云
+
+  https://mirrors.aliyun.com/goproxy/
+
+- 七牛云
+
+  [https://goproxy.cn,direct](https://goproxy.cn%2Cdirect/)
+
+如:
+
+```bash
+$ go env -w GOPROXY=https://goproxy.cn,direct
+```
+
+GOPROXY 的值是一个以英文逗号 `,` 分割的 Go 模块代理列表，允许设置多个模块代理，假设你不想使用，也可以将其设置为 “off” ，这将会禁止 Go 在后续操作中使用任何 Go 模块代理。
+
+> 而在刚刚设置的值中，我们可以发现值列表中有 “direct” 标识，它又有什么作用呢？
+
+实际上 “direct” 是一个特殊指示符，用于指示 Go 回源到模块版本的源地址去抓取（比如 GitHub 等），场景如下：当值列表中上一个 Go 模块代理返回 404 或 410 错误时，Go 自动尝试列表中的下一个，遇见 “direct” 时回源，也就是回到源地址去抓取，而遇见 EOF 时终止并抛出类似 “invalid version: unknown revision...” 的错误。
+
+##### GOSUMDB
+
+它的值是一个 Go checksum database，用于在拉取模块版本时（无论是从源站拉取还是通过 Go module proxy 拉取）保证拉取到的模块版本数据未经过篡改，若发现不一致，也就是可能存在篡改，将会立即中止。
+
+GOSUMDB 的默认值为：`sum.golang.org`，在国内也是无法访问的，但是 GOSUMDB 可以被 Go 模块代理所代理（详见：Proxying a Checksum Database）。
+
+因此我们可以通过设置 GOPROXY 来解决，而先前我们所设置的模块代理 `goproxy.cn` 就能支持代理 `sum.golang.org`，所以这一个问题在设置 GOPROXY 后，你可以不需要过度关心。
+
+另外若对 GOSUMDB 的值有自定义需求，其支持如下格式：
+
+- 格式 1：`<SUMDB_NAME>+<PUBLIC_KEY>`。
+- 格式 2：`<SUMDB_NAME>+<PUBLIC_KEY> <SUMDB_URL>`。
+
+也可以将其设置为“off”，也就是禁止 Go 在后续操作中校验模块版本。
+
+##### GONOPROXY/GONOSUMDB/GOPRIVATE
+
+这三个环境变量都是用在当前项目依赖了私有模块，例如像是你公司的私有 git 仓库，又或是 github 中的私有库，都是属于私有模块，都是要进行设置的，否则会拉取失败。
+
+更细致来讲，就是依赖了由 GOPROXY 指定的 Go 模块代理或由 GOSUMDB 指定 Go checksum database 都无法访问到的模块时的场景。
+
+而一般**建议直接设置 GOPRIVATE，它的值将作为 GONOPROXY 和 GONOSUMDB 的默认值，所以建议的最佳姿势是直接使用 GOPRIVATE**。
+
+并且它们的值都是一个以英文逗号 “,” 分割的模块路径前缀，也就是可以设置多个，例如：
+
+```bash
+$ go env -w GOPRIVATE="git.example.com,github.com/eddycjy/mquote"设置后，前缀为 git.xxx.com 和 github.com/eddycjy/mquote 的模块都会被认为是私有模块。
+```
+
+如果不想每次都重新设置，我们也可以利用通配符，例如：
+
+```bash
+$ go env -w GOPRIVATE="*.example.com"
+```
+
+这样子设置的话，所有模块路径为 example.com 的子域名（例如：git.example.com）都将不经过 Go module proxy 和 Go checksum database，**需要注意的是不包括 example.com 本身**。
+
+#### 初始化项目
+
+1. 开启go mod
+
+   ```bash
+    $ go env -w GO111MODULE=on
+   ```
+
+   又或是可以通过直接设置系统环境变量（写入对应的~/.bash_profile 文件亦可）来实现这个目的：
+
+   ```bash
+   $ export GO111MODULE=on
+   ```
+
+2. 初始化项目
+
+   ```bash
+   go mod init 项目仓库地址
+   ```
+
+   之后创建`main.go`
+
+   ```go
+   package main
+   
+   import (
+       "fmt"
+       "github.com/aceld/zinx/znet"
+       "github.com/aceld/zinx/ziface"
+   )
+   
+   func main(){
+       ...
+   }
+   ```
+
+   然后`go get github.com/aceld/zinx/znet`拉取依赖
+
+   项目目录下`go.mod`被修改，出现`go.sum`
+
+3. go.mod
+
+   ```go
+   module github.com/aceld/modules_test // 项目基本路径 如果你的版本已经大于等于2.0.0，按照Go的规范，你应该加上major的后缀(例：module github.com/panicthis/modfile/v2)
+   
+   go 1.14 // 标识最低支持go版本
+   
+   require github.com/aceld/zinx v0.0.0-20200221135252-8a8954e75100 // indirect 间接依赖
+   ```
+
+   ```go
+   // 语义化版本
+   // {MAJOR}.{MINOR}.{PATCH}
+   // {不兼容更新}.{新增功能}.{bug修复}
+   ```
+
+   ```go
+   // indirect 间接依赖
+   // 当前项目依赖A,但是A的go.mod遗漏了B, 那么就会在当前项目的go.mod中补充B, 加indirect注释
+   // 当前项目依赖A,但是A没有go.mod,同样就会在当前项目的go.mod中补充B, 加indirect注释
+   // 当前项目依赖A,A又依赖B,当对A降级的时候，降级的A不再依赖B,这个时候B就标记indirect注释
+   ```
+
+   ```go
+   // +incompatible 兼容一些没用mod管理的包或者版本>=2.0.0却没有加后缀的包
+   ```
+
+4. go.sum
+
+   其详细罗列了当前项目直接或间接依赖的所有模块版本，并写明了那些模块版本的 SHA-256 哈希值以备 Go 在今后的操作中保证项目所依赖的那些模块版本不会被篡改。
+
+#### 最小版本控制MVS
+
+<a href="https://learnku.com/docs/go-mod/1.17/minimal-version-selection/11441">原文</a>
+
+MVS 在模块的有向图上运行，由 go.mod 文件 指定。 图中的每个顶点代表一个模块版本。 每条边代表依赖项的最低要求版本，使用 require 指令指定。 在主模块的 go.mod 文件中，使用 replace 和 exclude 指令修改图形。
+
+MVS 从主模块开始（图中没有版本的特殊顶点），并遍历图，跟踪每个模块所需的最高版本。在遍历结束时，所需的最高版本构成构建列表：它们是满足所有要求的最低版本。
+
+考虑下图中的示例。主模块需要模块 A 和 模块 B 最低 1.2 版本，A 1.2 和 B 1.2 分别依赖 C 1.3 和 C 1.4， C 1.3 和 C 1.4 都依赖 D 1.2。
+
+![图片](https://cdn.learnku.com/uploads/images/202110/21/1/iBnQP2Wokm.png!large)
+
+MVS 访问并加载所有标蓝版本模块的 go.mod 文件。在图上遍历结束时，MVS 返回一个包含粗体版本的构建列表：A 1.2、B 1.2、C 1.4 和 D 1.2。请注意，可以使用更高版本的 B 和 D，但 MVS 不会选择它们，因为不需要它们。
+
+##### 替换
+
+主模块的 `go.mod` 文件中，可以使用 [`replace` 指令](https://golang.org/ref/mod#go-mod-file-replace) 来替换模块内容（包括其 `go.mod` 文件）。 `replace` 指令可能适用于模块的指定版本或所有版本。
+
+考虑下面的示例，其中 C 1.4 已被 R 替换。R 取决于 D 1.3 而不是 D 1.2，因此 MVS 返回包含 A 1.2、B 1.2、C 1.4（替换为 R）和 D 1.3 的构建列表
+
+![替换的模块版本图](https://cdn.learnku.com/uploads/images/202110/21/1/XjW765LWcY.svg)
+
+##### Exclusion
+
+在主模块的 `go.mod` 文件中，也可以使用 [`exclude` 指令](https://golang.org/ref/mod#go-mod-file-exclude) 在特定版本中排除一个模块。
+
+请看下面的例子。C 1.3 已经被排除。MVS 会像 A 1.2 要求 C 1.4（下一个更高版本）而不是 C 1.3 一样行事。
+
+![图片](https://cdn.learnku.com/uploads/images/202110/21/1/oaBu7jjTri.png!large)
+
+##### 升级
+
+[`go get`](https://golang.org/ref/mod#go-get) 命令可以用来升级一组模块。为了执行升级，`go` 命令在运行 MVS 之前改变了模块图，增加了从访问的版本到升级后的版本。
+
+看下面的例子。模块 B 可以从 1.2 升级到 1.3，C 可以从 1.3 升级到 1.4 ，D 可以从 1.2 升级到 1.3。
+
+![Module version graph with upgrades](https://cdn.learnku.com/uploads/images/202110/21/1/Mibr7iz5LP.svg)
+
+升级（和降级）可以增加或删除间接的依赖关系。在这种情况下，E 1.1 和 F 1.1 在升级后出现在构建列表中，因为 E 1.1 是 B 1.3 所需要的。
+
+为了保持升级，`go` 命令更新 `go.mod` 中的需求。它将改变 B 的需求为 1.3 版本。它还将增加对 C 1.4 和 D 1.3 的需求，并加上 `//间接`注释，因为这些版本不会被选中。
+
+##### 降级
+
+[`go get`](https://golang.org/ref/mod#go-get)命令也可以用来降低一组模块的等级。为了执行降级，`go` 命令通过移除降级后的版本来改变模块图。它也会移除依赖于被移除版本的其他模块的版本，因为它们可能与降级后的依赖版本不兼容。如果主模块需要一个被降级移除的模块版本，该需求将被改变为未被移除的先前版本。如果没有以前的版本，需求将被放弃。
+
+![降级的模块版本图](https://cdn.learnku.com/uploads/images/202110/21/1/fVO1TJb3Xz.svg)
+
+[`go get`](https://golang.org/ref/mod#go-get) 也可以完全删除依赖项，在参数后使用 `@none` 后缀。 这种类似于降级。 命名模块的所有版本都从模块图中删除。
+
+#### go get 指令
+
+<a href="https://www.lsdcloud.com/go/middleware/go-get.html#go-get">原文</a>
+
+下载导入路径指定的包及其依赖项，然后安装命名包，即执行 go install 命令。 用法如下：
+
+### go get
+
+```bash
+go get [-d] [-f] [-t] [-u] [-fix] [-insecure] [build flags] [packages]
+```
+
+|   参数    | 描述                                                         |
+| :-------: | ------------------------------------------------------------ |
+|    -d     | 让命令程序只执行下载动作，而不执行安装动作。                 |
+|    -f     | 仅在使用 - u 标记时才有效。该标记会让命令程序忽略掉对已下载代码包的导入路径的检查。如果下载并安装的代码包所属的项目是你从别人那里 Fork 过来的，那么这样做就尤为重要了。 |
+|   -fix    | 让命令程序在下载代码包后先执行修正动作，而后再进行编译和安装。 |
+| -insecure | 允许命令程序使用非安全的 scheme（如 HTTP）去下载指定的代码包。如果你用的代码仓库（如公司内部的 Gitlab）没有 HTTPS 支持，可以添加此标记。请在确定安全的情况下使用它。 |
+|    -t     | 让命令程序同时下载并安装指定的代码包中的测试源码文件中依赖的代码包。 |
+|    -u     | 让命令利用网络来更新已有代码包及其依赖包。默认情况下，该命令只会从网络上下载本地不存在的代码包，而不会更新已有的代码包。 |
+|    -v     | 打印出被构建的代码包的名字                                   |
+|    -x     | 打印出用到的命令                                             |
+
+### go install
+
+> go build 命令比较相似，go build 命令会编译包及其依赖，生成的文件存放在当前目录下。而且 go build 只对 main 包有效，其他包不起作用。而 go install 对于非 main 包会生成静态文件放在 $GOPATH/pkg 目录下，文件扩展名为 a。 如果为 main 包，则会在 $GOPATH/bin 下生成一个和给定包名相同的可执行二进制文件。具体语法如下:
+
+```bash
+go install [-i] [build flags] [packages]
+```
 
